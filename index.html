@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The CIR Project | Decoding the Predictive Brain</title>
+    <meta name="description"
+        content="Investigating how humans and animals compress time into space to navigate, manipulate, and survive in a constantly changing world.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap"
+        rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Lora', 'serif'],
+                    },
+                    colors: {
+                        cir: {
+                            50: '#f2f8f9',
+                            100: '#e0eff2',
+                            500: '#4a95ab',
+                            600: '#306e81', /* Poster Header Blue */
+                            800: '#1d4552',
+                            900: '#14313b', /* Dark teal for tech vibe */
+                            950: '#0c1e24',
+                        },
+                        accent: {
+                            400: '#f4a654',
+                            500: '#f18a20', /* Poster Orange */
+                        },
+                        peach: {
+                            100: '#fde1cc', /* Poster Box Background */
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Styles for gradients and animations */
+        .texture-paper {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.06'/%3E%3C/svg%3E");
+        }
+
+        .hero-pattern {
+            background-color: #112a33;
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E"),
+                radial-gradient(circle at 30% 50%, #1a3e4b 0%, #112a33 100%);
+        }
+
+        /* Cajal Engraving / Ink Animation */
+        .cajal-sketch {
+            filter: url(#sketch-filter);
+        }
+
+        .ink-path {
+            stroke-dasharray: 3000;
+            stroke-dashoffset: 3000;
+            animation: drawInk 12s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+        }
+
+        @keyframes drawInk {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #f18a20;
+            /* Changed to poster orange */
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+
+<body class="font-sans text-gray-800 bg-gray-50 antialiased texture-paper">
+
+    <!-- SVG Filter for Hand-drawn / Engraving effect -->
+    <svg style="width:0;height:0;position:absolute;" aria-hidden="true" focusable="false">
+        <defs>
+            <filter id="sketch-filter" x="-10%" y="-10%" width="120%" height="120%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- Navigation -->
+    <header class="fixed w-full top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
+                            <div class="w-10 h-10 rounded-lg overflow-hidden shadow-lg">
+                                <img src="fotos/logo.jpeg" alt="CIR Project" class="w-full h-full object-contain">
+                            </div>
+                    <span class="font-bold text-xl tracking-tight text-cir-900">The <span
+                            class="text-cir-600">CIR</span> Project</span>
+                </div>
+
+                <!-- Desktop Menu -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#home"
+                        class="nav-link text-gray-600 hover:text-cir-600 font-medium transition-colors">Home</a>
+                    <a href="#news"
+                        class="nav-link text-gray-600 hover:text-cir-600 font-medium transition-colors">News</a>
+                    <a href="#research"
+                        class="nav-link text-gray-600 hover:text-cir-600 font-medium transition-colors">Research</a>
+                    <a href="#publications"
+                        class="nav-link text-gray-600 hover:text-cir-600 font-medium transition-colors">Publications</a>
+                    <a href="#resources"
+                        class="nav-link text-gray-600 hover:text-cir-600 font-medium transition-colors">Resources</a>
+                    <a href="#team"
+                        class="nav-link text-gray-600 hover:text-cir-600 font-medium transition-colors">Team</a>
+                    <a href="#contact"
+                        class="nav-link text-gray-600 hover:text-cir-600 font-medium transition-colors">Contact</a>
+                </nav>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-600 hover:text-cir-600 focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 shadow-lg absolute w-full">
+            <div class="px-4 pt-2 pb-6 space-y-1">
+                <a href="#home"
+                    class="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-cir-600 hover:bg-gray-50">Home</a>
+                <a href="#news"
+                    class="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-cir-600 hover:bg-gray-50">News</a>
+                <a href="#research"
+                    class="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-cir-600 hover:bg-gray-50">Research</a>
+                <a href="#publications"
+                    class="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-cir-600 hover:bg-gray-50">Publications</a>
+                <a href="#resources"
+                    class="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-cir-600 hover:bg-gray-50">Resources</a>
+                <a href="#team"
+                    class="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-cir-600 hover:bg-gray-50">Team</a>
+                <a href="#contact"
+                    class="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-cir-600 hover:bg-gray-50">Contact</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="home" class="hero-pattern pt-32 pb-20 lg:pt-48 lg:pb-32 relative overflow-hidden text-white">
+        <!-- Cajal-inspired Neurological Engraving Background -->
+        <div class="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none opacity-40 mix-blend-screen">
+            <svg class="absolute inset-0 w-full h-full text-peach-100 cajal-sketch" viewBox="0 0 1000 1000"
+                preserveAspectRatio="xMidYMid slice">
+                <g stroke="currentColor" fill="none" stroke-width="1.5">
+                    <!-- Right Hemisphere Pyramidal Cell -->
+                    <g transform="translate(650, 800)">
+                        <!-- Soma -->
+                        <path d="M0,0 C-20,-40 -15,-90 0,-110 C15,-90 25,-40 0,0 Z" fill="currentColor" opacity="0.9" />
+                        <!-- Apical Dendrite & Arborization -->
+                        <path class="ink-path"
+                            d="M0,-110 Q5,-300 -30,-500 M-30,-500 Q-70,-600 -180,-700 M-30,-500 Q30,-600 120,-700 M-15,-400 Q-90,-450 -130,-550 M0,-300 Q90,-350 160,-400"
+                            stroke-width="2.5" />
+                        <path class="ink-path"
+                            d="M-180,-700 Q-210,-750 -280,-800 M-180,-700 Q-130,-750 -110,-850 M120,-700 Q170,-780 250,-820 M120,-700 Q80,-750 60,-850"
+                            stroke-width="1.5" />
+                        <path class="ink-path" d="M-130,-550 Q-190,-600 -270,-620 M160,-400 Q230,-420 320,-450"
+                            stroke-width="1.5" />
+                        <!-- Secondary branching -->
+                        <path class="ink-path" d="M-100,-600 Q-120,-680 -90,-720 M50,-620 Q80,-680 140,-720"
+                            stroke-width="1" />
+                        <!-- Basal Dendrites -->
+                        <path class="ink-path"
+                            d="M-10,-40 Q-110,10 -220,60 M-15,-15 Q-130,50 -160,130 M10,-40 Q110,10 220,60 M15,-15 Q130,50 160,130 M0,0 Q0,110 -25,220"
+                            stroke-width="2" />
+                        <!-- Axon -->
+                        <path class="ink-path" d="M0,0 Q-5,60 10,350" stroke-width="1.5" stroke-dasharray="8,8" />
+                    </g>
+                    <!-- Left Hemisphere Cell (Fainter, smaller) -->
+                    <g transform="translate(250, 950) scale(0.7)" opacity="0.6">
+                        <path d="M0,0 C-20,-40 -15,-90 0,-110 C15,-90 25,-40 0,0 Z" fill="currentColor" opacity="0.9" />
+                        <path class="ink-path"
+                            d="M0,-110 Q15,-300 40,-500 M40,-500 Q90,-600 180,-700 M40,-500 Q-30,-600 -120,-700 M15,-400 Q90,-450 130,-550 M0,-300 Q-90,-350 -160,-400"
+                            stroke-width="2.5" />
+                        <path class="ink-path"
+                            d="M180,-700 Q210,-750 280,-800 M180,-700 Q130,-750 110,-850 M-120,-700 Q-170,-780 -250,-820 M-120,-700 Q-80,-750 -60,-850"
+                            stroke-width="1.5" />
+                        <path class="ink-path" d="M-10,-40 Q-110,10 -220,60 M10,-40 Q110,10 220,60 M0,0 Q5,110 -15,220"
+                            stroke-width="2" />
+                    </g>
+                    <!-- Background cortical hatching lines -->
+                    <path class="ink-path"
+                        d="M-100,100 Q300,50 900,200 M-100,200 Q400,100 1200,300 M-100,300 Q500,150 1200,400 M-100,400 Q600,200 1200,500"
+                        stroke-width="0.5" opacity="0.2" />
+                </g>
+            </svg>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="max-w-4xl">
+                <div
+                    class="inline-block px-4 py-1.5 rounded-full bg-cir-800/50 border border-cir-600/30 text-accent-400 text-sm font-semibold tracking-wide mb-6 backdrop-blur-sm">
+                    Neuroscience • Biology • Mathematics • Statistics
+                </div>
+                <h1
+                    class="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold italic tracking-tight leading-tight mb-6">
+                    Decoding the Predictive Brain in <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-accent-400 to-yellow-300">Dynamic
+                        Environments</span>
+                </h1>
+                <p class="text-lg sm:text-xl text-gray-300 mb-10 max-w-3xl leading-relaxed">
+                    Exploring how biological brains transform dynamic experiences into compact representations of time and space, enabling prediction, decision-making, and adaptive behavior in changing environments.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#research"
+                        class="inline-flex justify-center items-center px-8 py-3.5 border border-transparent text-base font-semibold rounded-lg text-white bg-cir-600 hover:bg-cir-500 transition-colors shadow-lg shadow-cir-600/30">
+                        Explore Our Research
+                    </a>
+                    <a href="#publications"
+                        class="inline-flex justify-center items-center px-8 py-3.5 border border-gray-600 text-base font-semibold rounded-lg text-white hover:bg-gray-800 transition-colors">
+                        Latest Publications
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- THE CORE CONCEPT -->
+    <section class="py-20 lg:py-28 bg-peach-100 relative" id="concept">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col lg:flex-row items-center gap-16">
+                <!-- Text Content -->
+                <div class="lg:w-1/2">
+                    <h2 class="text-sm font-bold text-cir-600 uppercase tracking-widest mb-2 font-sans">The Paradigm
+                        Shift</h2>
+                    <h3 class="text-3xl sm:text-4xl font-serif font-bold italic text-gray-900 mb-6">The "Time
+                        Compaction" Hypothesis</h3>
+                    <p class="text-lg text-gray-800 mb-6 leading-relaxed">
+                        Survival in nature requires real-time decision-making in highly dynamic, time-constrained
+                        situations. How does the brain process this overwhelming amount of spatiotemporal information?
+                    </p>
+                    <div class="pl-6 border-l-4 border-accent-500 bg-white/50 p-4 rounded-r-lg">
+                        <p class="text-gray-900 leading-relaxed font-medium">
+                            The CIR (Compact Internal Representation) Project proposes a paradigm shift: the brain does
+                            not encode time explicitly. Instead, it transforms time into space by predicting future
+                            interactions and mapping them as static obstacles or targets.
+                        </p>
+                    </div>
+                    <p class="text-lg text-gray-800 mt-6 leading-relaxed">
+                        By reducing complex dynamic scenarios into static spatial maps, we explain how living beings
+                        achieve fast, reliable, and optimal decision-making.
+                    </p>
+                </div>
+
+                <!-- Image / Graphic Representation -->
+                <div class="lg:w-1/2 relative">
+                    <div
+                        class="aspect-w-4 aspect-h-3 rounded-[2rem] overflow-hidden shadow-2xl relative border-4 border-white z-10">
+                        <!-- Placeholder for a network/brain infographic -->
+                        <img img src="fotos/cir.jpeg" 
+                            alt="Time Compaction Concept" class="w-full h-full object-cover">
+                    </div>
+                    <!-- Decorative element (Cajal sketch framing) -->
+                    <svg class="absolute -bottom-16 -left-16 w-64 h-64 text-cir-600/20 cajal-sketch -z-10"
+                        viewBox="0 0 200 200">
+                        <path class="ink-path"
+                            d="M100,100 Q150,50 180,10 M100,100 Q180,120 190,180 M100,100 Q50,150 20,190 M100,100 Q20,80 10,20"
+                            fill="none" stroke="currentColor" stroke-width="2" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LATEST NEWS & ACHIEVEMENTS -->
+    <section id="news" class="py-20 bg-white border-b border-gray-200/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-end mb-12">
+                <div>
+                    <h2 class="text-sm font-bold text-accent-500 uppercase tracking-widest mb-2 font-sans">Updates</h2>
+                    <h3 class="text-3xl sm:text-4xl font-serif font-bold italic text-gray-900">Latest News &
+                        Achievements</h3>
+                </div>
+
+                </a>
+            </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- News Item 1 -->
+                    <div class="group cursor-pointer">
+                        <div
+                            class="overflow-hidden rounded-xl mb-4 border-2 border-gray-100 shadow-sm relative bg-peach-100">
+                            <div
+                                class="absolute inset-0 bg-cir-600/10 mix-blend-multiply group-hover:bg-transparent transition-colors duration-500 z-10">
+                            </div>
+                                 <img src="fotos/press.jpeg" alt="press"
+                                class="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-700 mix-blend-multiply opacity-80">
+                        </div>
+                        <div class="flex items-center gap-3 text-sm text-gray-500 mb-3 font-sans">
+                            <span class="font-bold text-accent-500 uppercase tracking-wider text-xs">Publication</span>
+                            <span>•</span>
+                            <span>July 2026</span>
+                        </div>
+                        <h4
+                            class="text-xl font-bold text-gray-900 mb-2 group-hover:text-cir-600 transition-colors font-serif italic">
+                            Memorizing the future: encoding anticipated interactions enhances human memory for dynamic stimuli
+                        </h4>
+                        <p class="text-gray-600 text-sm leading-relaxed">
+                            Our research has been published in PNAS Nexus, revealing how the brain enhances memory by encoding anticipated future interactions within dynamic environments.
+                        </p>
+                    </div>
+
+                    <!-- News Item 2 -->
+                    <div class="group cursor-pointer">
+                        <div
+                            class="overflow-hidden rounded-xl mb-4 border-2 border-gray-100 shadow-sm relative  bg-peach-100">
+                            <div
+                                class="absolute inset-0 bg-cir-600/10 mix-blend-multiply group-hover:bg-transparent transition-colors duration-500 z-10">
+                            </div>
+                             <img src="fotos/fens.jpeg"
+                                alt="FENS Forum 2026 Poster Presentation"
+                                class="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-700 mix-blend-multiply opacity-80">
+                        </div>
+                        <div class="flex items-center gap-3 text-sm text-gray-500 mb-3 font-sans">
+                            <span class="font-bold text-cir-600 uppercase tracking-wider text-xs">Conference</span>
+                            <span>•</span>
+                            <span>July 2026</span>
+                        </div>
+                        <h4
+                            class="text-xl font-bold text-gray-900 mb-2 group-hover:text-cir-600 transition-colors font-serif italic">
+                            Presenting at FENS Forum 2026
+                        </h4>
+                        <p class="text-gray-600 text-sm leading-relaxed">
+                            Last week we attended the FENS Forum 2026 in Barcelona, organized by the Federation of European Neuroscience Societies. We presented two posters exploring different aspects of our research on predictive cognition.
+                        </p>
+                    </div>
+
+                    <!-- News Item 3 -->
+                    <div class="group cursor-pointer">
+                        <div
+                            class="overflow-hidden rounded-xl mb-4 border-2 border-gray-100 shadow-sm relative bg-peach-100">
+                            <div
+                                class="absolute inset-0 bg-cir-600/10 mix-blend-multiply group-hover:bg-transparent transition-colors duration-500 z-10">
+                            </div>
+                             <img src="fotos/pintofscience.jpeg" alt="press"
+                                alt="Pint of Science Madrid"
+                                class="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-700 mix-blend-multiply opacity-80">
+                        </div>
+                        <div class="flex items-center gap-3 text-sm text-gray-500 mb-3 font-sans">
+                            <span class="font-bold text-purple-600 uppercase tracking-wider text-xs">Divulgation</span>
+                            <span>•</span>
+                            <span>May 2026</span>
+                        </div>
+                        <h4
+                            class="text-xl font-bold text-gray-900 mb-2 group-hover:text-cir-600 transition-colors font-serif italic">
+                            Sharing Neuroscience at Pint of Science Madrid
+                        </h4>
+                        <p class="text-gray-600 text-sm leading-relaxed">
+                            We participated in Pint of Science Madrid, bringing neuroscience research closer to the public through talks and discussions about how the brain represents time, prediction, and future interactions.
+                        </p>
+                    </div>
+                </div>
+            <!-- Mobile "View All" Button -->
+            <div class="mt-10 text-center sm:hidden">
+
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- RESEARCH (The 3 Pillars) -->
+    <section id="research" class="py-20 lg:py-28 bg-transparent">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-sm font-bold text-cir-600 uppercase tracking-widest mb-2 font-sans">Research Areas</h2>
+                <h3 class="text-3xl sm:text-4xl font-serif font-bold italic text-gray-900 mb-6">The Three Pillars</h3>
+                <p class="text-lg text-gray-600">
+                  Our interdisciplinary research combines neuroscience, mathematics, physics, and computational modeling to understand how the brain represents dynamic environments, predicts future interactions, and supports adaptive behavior.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Pillar 1 -->
+                <div
+                    class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:-translate-y-2 transition-transform duration-300">
+                    <div
+                        class="w-14 h-14 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-2xl mb-6 shadow-inner">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Cognitive Neuroscience</h4>
+                    <p class="text-sm font-semibold text-cir-600 mb-4">Biological mechanisms of spatiotemporal cognition</p>
+                    <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                        Understanding how biological systems represent and predict dynamic environments.
+                    </p>
+                    <p class="text-gray-500 text-sm leading-relaxed">
+                    We investigate Compact Internal Representations through behavioral experiments and neurophysiological recordings. Our research spans human cognition and animal electrophysiology, including hippocampal dynamics and place cell activity, to uncover how predictive information is encoded in neural populations.                    </p>
+                </div>
+
+                <!-- Pillar 2 -->
+                <div
+                    class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:-translate-y-2 transition-transform duration-300">
+                    <div
+                        class="w-14 h-14 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-2xl mb-6 shadow-inner">
+                        <i class="fa-solid fa-project-diagram"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Mathematical Modeling</h4>
+                    <p class="text-sm font-semibold text-purple-600 mb-4">Computational principles of cognition</p>
+                    <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                        Developing mathematical frameworks to describe the dynamics underlying cognition.
+                    </p>
+                    <p class="text-gray-500 text-sm leading-relaxed">
+                        We build models that connect biological mechanisms with cognitive functions. Using dynamical systems, neural models, and complex network approaches, we study how neural circuits generate predictions and organize information into cognitive maps.
+                </div>
+
+                <!-- Pillar 3 -->
+                <div
+                    class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:-translate-y-2 transition-transform duration-300">
+                    <div
+                        class="w-14 h-14 rounded-xl bg-cyan-100 text-cyan-600 flex items-center justify-center text-2xl mb-6 shadow-inner">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Cognitive Robotics</h4>
+                    <p class="text-sm font-semibold text-cyan-600 mb-4">From biological principles to artificial systems</p>
+                    <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                        Exploring how principles of biological cognition can inspire artificial systems.
+                    </p>
+                    <p class="text-gray-500 text-sm leading-relaxed">
+                        We implement theoretical models in autonomous systems to investigate navigation, interaction, and decision-making in complex environments, bridging neuroscience and computational approaches.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PUBLICATIONS (Brief Overview) -->
+    <section id="publications" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-end mb-10 border-b border-gray-200 pb-6">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-900">Selected Publications</h2>
+                    <p class="text-gray-600 mt-2">Chronological and Topically curated findings.</p>
+                </div>
+                    <a href="publications.html" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex items-center text-cir-600 hover:text-cir-800 font-medium">
+                        View Full Database <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Pub Item 1 -->
+                <div class="group relative flex flex-col sm:flex-row gap-6 p-6 rounded-xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
+                    <div class="sm:w-32 flex-shrink-0 text-sm font-bold text-gray-400">2026</div>
+                    <div>
+                        <span class="inline-block px-2.5 py-0.5 rounded-md text-xs font-bold bg-cir-600 text-white mb-2 uppercase tracking-wide">Cognitive Neuroscience</span>
+                        <h4 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-cir-600 transition-colors">Memorizing the future: Encoding anticipated interactions enhances human memory for dynamic stimuli </h4>
+                        <p class="text-gray-600 text-sm mb-3">PNAS Nexus. Authors: Aparicio-Rodríguez, Ruiz-Navalón, Manubens, Sánchez-Jiménez, Calvo-Tapia, Villacorta-Atienza[cite: 21].</p>
+                        <a href="https://academic.oup.com/pnasnexus/advance-article/doi/10.1093/pnasnexus/pgag244/8735757" target="_blank" rel="noopener noreferrer" 
+                            class="text-sm font-medium text-cir-600">View Publication <i class="fas fa-external-link-alt ml-1 text-xs"></i></a>
+                    </div>
+                </div>
+                 <!-- Pub Item 2 -->
+                    <div class="group relative flex flex-col sm:flex-row gap-6 p-6 rounded-xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
+                    <div class="sm:w-32 flex-shrink-0 text-sm font-bold text-gray-400">2026</div>
+                    <div>
+                        <span class="inline-block px-2.5 py-0.5 rounded-md text-xs font-bold bg-cir-600 text-white mb-2 uppercase tracking-wide">Cognitive Neuroscience</span>
+                        <h4 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-cir-600 transition-colors">Event-Centered Prediction: How Future Interaction Points Shape Human Anticipation of Motion</h4>
+                        <p class="text-gray-600 text-sm mb-3">bioRxiv. Authors: Aparicio-Rodríguez, Martín-Fernández, Manubens, Sánchez-Jiménez, Calvo-Tapia, Villacorta-Atienza.</p>
+                        <a href="https://www.biorxiv.org/content/10.64898/2026.07.15.738481v1" target="_blank" rel="noopener noreferrer" 
+                            class="text-sm font-medium text-cir-600">View Publication <i class="fas fa-external-link-alt ml-1 text-xs"></i></a>
+                    </div>
+                </div>
+
+                    <!-- Pub Item 2 -->
+
+                <div class="group relative flex flex-col sm:flex-row gap-6 p-6 rounded-xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
+                    <div class="sm:w-32 flex-shrink-0 text-sm font-bold text-gray-400">2025</div>
+                    <div>
+                        <span class="inline-block px-2.5 py-0.5 rounded-md text-xs font-bold bg-yellow-400 text-white mb-2 uppercase tracking-wide">Mathematical Modeling</span>
+                        <h4 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-yellow-600 transition-colors">Minimal Neural Network Conditions for Encoding Future Interactions</h4>
+                        <p class="text-gray-600 text-sm mb-3">International Journal of Neural Systems. Authors: Diez-Hermano, Aparicio-Rodriguez, Manubens, Sanchez-Jimenez, Calvo-Tapia, Levcik, Villacorta-Atienza[cite: 22].</p>
+                        <a href="https://www.worldscientific.com/doi/10.1142/S0129065725500169" target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-yellow-600">View Publication <i class="fas fa-external-link-alt ml-1 text-xs"></i></a>
+                    </div>
+                </div>
+
+
+            <div class="mt-8 text-center sm:hidden">
+                <a href="publications.html" class="inline-flex items-center text-cir-600 font-medium">
+                    View Full Database <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- RESOURCES (Software & Data) -->
+    <section id="resources" class="py-20 lg:py-28 bg-cir-900 text-white relative overflow-hidden">
+        <!-- Cajal-style Background Pattern -->
+        <div class="absolute inset-0 z-0 opacity-20">
+            <svg class="w-full h-full text-accent-500 cajal-sketch" preserveAspectRatio="none" viewBox="0 0 1000 500">
+                <g stroke="currentColor" fill="none" stroke-width="1.5">
+                    <path class="ink-path" d="M-100,250 Q200,200 500,400 T1100,200" stroke-width="2" />
+                    <path class="ink-path"
+                        d="M200,230 Q250,100 350,50 M500,400 Q600,500 700,450 M800,290 Q900,150 1000,100"
+                        stroke-width="1" />
+                    <!-- Somas -->
+                    <circle cx="200" cy="230" r="15" fill="currentColor" />
+                    <circle cx="500" cy="400" r="20" fill="currentColor" />
+                    <circle cx="800" cy="290" r="12" fill="currentColor" />
+                </g>
+            </svg>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="mb-16">
+                <h2 class="text-sm font-bold text-accent-400 uppercase tracking-widest mb-2 font-sans">Open Science &
+                    Tools</h2>
+                <h3 class="text-3xl sm:text-4xl font-serif font-bold italic mb-4">Resources & Datasets</h3>
+                <p class="text-lg text-gray-400 max-w-2xl">
+                    We are committed to open and collaborative research. Discover the tools, datasets, and resources that support our work on cognition, neuroscience, and computational modeling.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-6">
+                <!-- Resource 1 -->
+                <div
+                    class="bg-slate-800/50 p-6 rounded-xl border border-slate-700 hover:border-accent-500 transition-colors">
+                    <div
+                        class="w-12 h-12 bg-slate-700 rounded-lg flex items-center justify-center text-accent-400 text-xl mb-4">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2">Similarity Structure</h4>
+                    <p class="text-sm text-gray-400 mb-6 leading-relaxed">
+                       An open-source R package for estimating similarity structure between two samples using repeated subsampling, statistical testing, smoothing, and parametric fitting.
+                    </p>
+                    <a href="https://github.com/serbiodh/similaritystructure" target="_blank" rel="noopener noreferrer"
+                         class="text-sm font-semibold text-accent-400 hover:text-white transition-colors">
+                        <i class="fa-brands fa-github mr-2"></i> Access Data
+                    </a>
+                </div>
+
+                <!-- Resource 2 -->
+                <div
+                    class="bg-slate-800/50 p-6 rounded-xl border border-slate-700 hover:border-accent-500 transition-colors">
+                    <div
+                        class="w-12 h-12 bg-slate-700 rounded-lg flex items-center justify-center text-accent-400 text-xl mb-4">
+                        <i class="fa-solid fa-vr-cardboard"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2">Experimental Stimuli</h4>
+                    <p class="text-sm text-gray-400 mb-6 leading-relaxed">
+                        Explore representative stimuli from the original study introducing the Cognitive Information Representation (CIR) framework. For more recent studies, including our work on memory for dynamic stimuli, representative experimental materials are available in the supplementary materials of the corresponding publications.
+                    </p>
+                     <a href="https://github.com/manuben-s/web-thecirproject/blob/main/resources/cir-2021.mp4" target="_blank" rel="noopener noreferrer"
+                         class="text-sm font-semibold text-accent-400 hover:text-white transition-colors">
+                        <i class="fa-solid fa-download mr-2"></i> Access Video
+                    </a>
+                </div>
+
+                <!-- Resource 3 -->
+                <div
+                    class="bg-slate-800/50 p-6 rounded-xl border border-slate-700 hover:border-accent-500 transition-colors">
+                    <div
+                        class="w-12 h-12 bg-slate-700 rounded-lg flex items-center justify-center text-accent-400 text-xl mb-4">
+                        <i class="fa-solid fa-database"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2">Experimental Datasets</h4>
+                    <p class="text-sm text-gray-400 mb-6 leading-relaxed">
+                       Dataset and analysis code for the study "Memorizing the Future: Encoding Anticipated Interactions Enhances Human Memory for Dynamic Stimuli".
+                    </p>
+                    <a href="https://github.com/gonzaapa/Memorizing_the_future" target="_blank" rel="noopener noreferrer"
+                         class="text-sm font-semibold text-accent-400 hover:text-white transition-colors">
+                        <i class="fa-solid fa-file-csv mr-2"></i> Access Data
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEAM & OPPORTUNITIES -->
+    <section id="team" class="py-20 lg:py-28 bg-transparent border-t border-gray-200/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-serif font-bold italic text-gray-900 mb-4">Our Team</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    A multidisciplinary research team based in Spain, with international collaborations and diverse expertise spanning neuroscience, physics, mathematics, and computational sciences.
+                </p>
+            </div>
+
+            <!-- Team Grid -->
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+                <!-- Member 1 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    <img src="fotos/pepo.jpeg" alt="José Antonio Villacorta Atienza"
+                        class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h4 class="text-lg font-bold text-gray-900">José Antonio </p>
+                            Villacorta Atienza</h4>
+                        <p class="text-sm text-cir-600 font-medium mb-3">Principal Investigator </p>
+                        <p class="text-sm text-gray-900 font-medium mb-3">Physics • Mathematics </p>
+                        <p class="text-sm text-cir-600 font-medium mb-3">josea@ucm.es
+                        <div class="flex space-x-3 text-gray-400">
+                            <a href="https://www.linkedin.com/in/villacorta-atienza-phd/" target="_blank" rel="noopener noreferrer" class="hover:text-cir-600"><i class="fa-brands fa-linkedin text-lg"></i></a>
+                            <a href="https://orcid.org/0000-0002-9220-1226" target="_blank" rel="noopener noreferrer" class="hover:text-cir-600"><i class="fa-brands fa-orcid text-lg"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Member 2 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    <img src="fotos/abel.jpeg" alt="Abel Sánchez Jiménez"
+                        class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h4 class="text-lg font-bold text-gray-900">Abel </p>
+                            Sánchez Jiménez</h4>
+                        <p class="text-sm text-cir-600 font-medium mb-3">Co-Principal Investigator
+                        <p class="text-sm text-gray-900 font-medium mb-3">Biology • Statistics • Neuroscience </p>
+                        <p class="text-sm text-cir-600 font-medium mb-3">abelsanc@ucm.es
+                        
+                        </p>
+                        <div class="flex space-x-3 text-gray-400">
+                            <a href="https://scholar.google.com/citations?user=I0HBWp4AAAAJ&hl=es" target="_blank" rel="noopener noreferrer" class="hover:text-cir-600"><i class="fa-brands fa-google text-lg"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Member 3 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                   <img src="fotos/carlos.jpeg" alt="Carlos Calvo Tapia"
+                        class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h4 class="text-lg font-bold text-gray-900">Carlos </p>
+                            Calvo Tapia</h4>
+                        <p class="text-sm text-cir-600 font-medium mb-3">Postdoctoral Researcher</p>
+                        <p class="text-sm text-gray-900 font-medium mb-3">Mathematics </p>
+                        <p class="text-sm text-cir-600 font-medium mb-3">cctapia@ucm.es
+                        <div class="flex space-x-3 text-gray-400">
+                            <a href="https://scholar.google.com/citations?user=COZLiRoAAAAJ&hl=es&oi=sra" target="_blank" rel="noopener noreferrer" class="hover:text-cir-600"><i class="fa-brands fa-google text-lg"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Member 4 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    <img src="fotos/sergio.jpeg" alt="Sergio Díez Hermano"
+                        class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h4 class="text-lg font-bold text-gray-900">Sergio </p>
+                            Díez Hermano</h4>
+                        <p class="text-sm text-cir-600 font-medium mb-3">Postdoctoral Researcher</p>
+                        <p class="text-sm text-gray-900 font-medium mb-3">Biology • Statistics</p>
+                        <p class="text-sm text-cir-600 font-medium mb-3">serbiodh@gmail.com
+                        <div class="flex space-x-3 text-gray-400">
+                            <a href="https://scholar.google.com/citations?user=WmHe43UAAAAJ&hl=es" target="_blank" rel="noopener noreferrer" class="hover:text-cir-600"><i class="fa-brands fa-google text-lg"></i></a>
+                            <a href="https://www.linkedin.com/in/sergio-diez-hermano/" target="_blank" rel="noopener noreferrer" class="hover:text-cir-600"><i class="fa-brands fa-linkedin text-lg"></i></a>
+                            <a href="https://github.com/serbiodh" target="_blank" rel="noopener noreferrer" class="hover:text-cir-600"><i class="fa-brands fa-github text-lg"></i></a>
+                        </div>
+                    </div>
+                </div>
+        
+            <!-- Member 4 -->
+            <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <img src="fotos/paloma.jpeg" alt="Paloma Manubens Coda"
+                    class="w-full h-64 object-cover">
+                <div class="p-6">
+                    <h4 class="text-lg font-bold text-gray-900">Paloma </p>
+                        Manubens Coda</h4>
+                    <p class="text-sm text-cir-600 font-medium mb-3">PhD Candidate</p>
+                    <p class="text-sm text-gray-900 font-medium mb-3">Biology • Neuroscience</p>
+                    <p class="text-sm text-cir-600 font-medium mb-3">pmanuben@ucm.es
+                    <div class="flex space-x-3 text-gray-400">
+                        <a href="https://scholar.google.com/citations?user=RPJM2XIAAAAJ&hl=es&oi=ao" target="_blank" rel="noopener noreferrer" class="hover:text-cir-600"><i class="fa-brands fa-google text-lg"></i></a>
+                        <a href="https://www.linkedin.com/in/paloma-manubens/" target="_blank" rel="noopener noreferrer" class="hover:text-cir-600"><i class="fa-brands fa-linkedin text-lg"></i></a>
+                        <a href="https://github.com/manuben-s" target="_blank" rel="noopener noreferrer" class="hover:text-cir-600"><i class="fa-brands fa-github text-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+      
+        <!-- Member 6 -->
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+            <img src="fotos/gonzalo.jpeg" alt="Gonzalo Aparicio Rodríguez"
+                class="w-full h-64 object-cover">
+            <div class="p-6">
+                <h4 class="text-lg font-bold text-gray-900">Gonzalo </p>
+                    Aparicio Rodríguez </h4>
+                <p class="text-sm text-cir-600 font-medium mb-3">PhD Candidate</p>
+                <p class="text-sm text-gray-900 font-medium mb-3">Biology • Statistics</p>
+                <p class="text-sm text-cir-600 font-medium mb-3">gonzaapa@ucm.es
+                <div class="flex space-x-3 text-gray-400">
+                    <a href="https://scholar.google.com/citations?user=6SeDxQ0AAAAJ&hl=es&oi=sra" target="_blank" rel="noopener noreferrer" class="hover:text-cir-600"><i class="fa-brands fa-google text-lg"></i></a>
+                    <a href="https://www.linkedin.com/in/gonzalo-aparicio-rodriguez/" target="_blank" rel="noopener noreferrer" class="hover:text-cir-600"><i class="fa-brands fa-linkedin text-lg"></i></a>
+                    <a href="https://github.com/gonzaapa" target="_blank" rel="noopener noreferrer" class="hover:text-cir-600"><i class="fa-brands fa-github text-lg"></i></a>
+                </div>
+            </div>
+        </div>
+      
+        <!-- Member 7 -->
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+            <img src="fotos/tyssa.jpeg" alt="Tyssa Martín Fernández"
+                class="w-full h-64 object-cover">
+            <div class="p-6">
+                <h4 class="text-lg font-bold text-gray-900">Tyssa </p>
+                    Martín Fernández</h4>
+                <p class="text-sm text-cir-600 font-medium mb-3">Research Assistant</p>
+                <p class="text-sm text-gray-900 font-medium mb-3">Biology • Statistics</p>
+                <p class="text-sm text-cir-600 font-medium mb-3">tymartin@ucm.es
+                <div class="flex space-x-3 text-gray-400">
+                    <a href="https://www.linkedin.com/in/tyssamf/" target="_blank" rel="noopener noreferrer" class="hover:text-cir-600"><i class="fa-brands fa-linkedin text-lg"></i></a>
+                    <a href="https://github.com/tyssamf17" target="_blank" rel="noopener noreferrer" class="hover:text-cir-600"><i class="fa-brands fa-github text-lg"></i></a>
+                </div>
+            </div>
+        </div>
+        </div>
+        <!-- Opportunities Banner -->
+        <div
+            class="bg-gradient-to-r from-cir-900 to-cir-600 rounded-3xl p-8 sm:p-12 text-white relative overflow-hidden shadow-2xl border-4 border-accent-500/20">
+            <!-- decorative circles -->
+            <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-white opacity-5"></div>
+            <div
+                class="absolute bottom-0 left-0 -ml-16 -mb-16 w-48 h-48 rounded-full bg-accent-500 opacity-30 blur-2xl">
+            </div>
+
+            <div class="relative z-10 md:w-2/3">
+                <h3 class="text-2xl sm:text-3xl font-bold mb-4">Join The CIR Project</h3>
+                <p class="text-cir-50 mb-8 leading-relaxed">
+                    We are always looking for motivated people interested in becoming part of our project. We welcome
+                    undergraduate students, Master's students, PhD students, and postdoctoral researchers interested in
+                    exploring new questions within our research areas. </p>
+                As you may have noticed, our interests and approaches are diverse, so we encourage you to get in touch
+                with us. Perhaps we are currently developing a line of research that matches your experience and
+                interests; and if not, we would be happy to explore new ideas and potential collaborations. </p>
+                <br>
+                <a href="#contact"
+                    class="inline-flex items-center px-6 py-3 bg-accent-500 hover:bg-accent-400 text-slate-900 font-bold rounded-lg transition-colors shadow-lg">
+                    Contact us <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <!-- CONTACT & LOCATIONS -->
+    <section id="contact" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row gap-16">
+
+                <!-- Contact Form -->
+                <div class="lg:w-1/2">
+                    <h3 class="text-3xl font-bold text-gray-900 mb-6">Get in Touch</h3>
+                    <p class="text-gray-600 mb-8">
+                        Have a question or interested in collaboration? Fill out the form below and our team will get back to you.
+                    </p>
+
+                    <form id="contact-form" class="space-y-6">
+                        <div class="grid sm:grid-cols-2 gap-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    required
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cir-500 focus:border-cir-500 transition-colors"
+                                    placeholder="Capi Bara">
+                            </div>
+
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    required
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cir-500 focus:border-cir-500 transition-colors"
+                                    placeholder="CapiBara@example.com">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                            <select
+                                id="subject"
+                                name="subject"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cir-500 focus:border-cir-500 transition-colors bg-white">
+                                <option>Collaboration Inquiry</option>
+                                <option>Join the Team (Student/Postdoc)</option>
+                                <option>Data/Software Request</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                            <textarea
+                                id="message"
+                                name="message"
+                                rows="4"
+                                required
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-cir-500 focus:border-cir-500 transition-colors"
+                                placeholder="How can we collaborate?"></textarea>
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="w-full py-3 px-4 bg-cir-600 hover:bg-cir-700 text-white font-bold rounded-lg shadow-md transition-colors">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+
+                <!-- EmailJS -->
+                <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+                <script>
+                emailjs.init({
+                    publicKey: "plcosoBmIbm2rui1n"
+                });
+
+                document.getElementById("contact-form").addEventListener("submit", async function (e) {
+                    e.preventDefault();
+
+                    const form = this;
+                    const button = form.querySelector('button[type="submit"]');
+
+                    button.disabled = true;
+                    button.textContent = "Sending...";
+
+                    try {
+                        // Envía el correo al laboratorio
+                        await emailjs.sendForm(
+                            "theCIRproject",
+                            "template_1vogtnx",
+                            form
+                        );
+
+                        // Envía la respuesta automática al usuario
+                        await emailjs.sendForm(
+                            "theCIRproject",
+                            "template_og3ai81",
+                            form
+                        );
+
+                        alert("Message sent successfully!");
+                        form.reset();
+
+                    } catch (error) {
+                        console.error("EmailJS Error:", error);
+                        alert("Failed to send the message. Please try again later.");
+                    } finally {
+                        button.disabled = false;
+                        button.textContent = "Send Message";
+                    }
+                });
+                </script>
+
+                <!-- Locations and Institutions -->
+                <div class="lg:w-1/2 lg:pl-10 lg:border-l border-gray-200">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-8">Main Institution</h3>
+
+                    <div class="space-y-8">
+                        <!-- Institution 1 -->
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="w-16 h-16 bg-gray-100 rounded-lg flex-shrink-0 flex items-center justify-center p-2 border border-gray-200">
+                                <img src="https://placehold.co/100x100/ffffff/0f172a?text=UCM" alt="UCM Logo"
+                                    class="w-full h-full object-contain">
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-gray-900">Universidad Complutense de Madrid</h4>
+                                <p class="text-gray-600 text-sm mt-1"><i
+                                        class="fas fa-map-marker-alt text-cir-600 w-4"></i> Biomathematics Unit, Faculty
+                                    of Biology, Madrid, Spain</p>
+                            </div>
+                        </div>
+<h3 class="text-2xl font-bold text-gray-900 mb-8">Main Collaborations</h3>
+
+                    <div class="space-y-8">
+                        <!-- Institution 2 -->
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="w-16 h-16 bg-gray-100 rounded-lg flex-shrink-0 flex items-center justify-center p-2 border border-gray-200">
+                                <img src="https://placehold.co/100x100/ffffff/0f172a?text=UNN" alt="UNN Logo"
+                                    class="w-full h-full object-contain">
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-gray-900">Czech Academy of Sciences (David Levčík)</h4>
+                                <p class="text-gray-600 text-sm mt-1"><i
+                                        class="fas fa-map-marker-alt text-cir-600 w-4"></i> Institute of Physiology,
+                                    Prague, Czech Republic</p>
+                            </div>
+                        </div>
+
+                        <!-- Extra Contact Info -->
+                        <div class="pt-6 border-t border-gray-100 mt-8">
+                            <h4 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">Direct Contact
+                            </h4>
+                            <p class="flex items-center text-gray-600 mb-2">
+                                <i class="fas fa-envelope text-cir-600 w-6"></i> cirprojectucm@gmail.com
+                            </p>
+                            <p class="flex items-center text-gray-600">
+                                <i class="fab fa-instagram text-cir-600 w-6"></i> @TheCIRProject
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#a4b5b9] text-gray-800 py-8 border-t border-gray-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-4 md:mb-0">
+                <span class="font-bold text-gray-900">The CIR Project</span> &copy; 2026. All rights reserved.
+            </div>
+            <div class="flex space-x-6">
+                <a href="#" class="hover:text-cir-800 font-medium transition-colors">Privacy Policy</a>
+                <a href="#" class="hover:text-cir-800 font-medium transition-colors">Terms of Use</a>
+                <a href="https://github.com" class="hover:text-cir-800 transition-colors" target="_blank" rel="noopener noreferrer"><i
+                        class="fab fa-github text-xl"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts for interactivity -->
+    <script>
+        // Mobile menu toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+            });
+        });
+
+        // Navbar blur and shadow on scroll
+        const header = document.querySelector('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                header.classList.add('shadow-sm');
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+            } else {
+                header.classList.remove('shadow-sm');
+                header.style.background = 'rgba(255, 255, 255, 0.9)';
+            }
+        });
+    </script>
+</body>
+
+</html>
